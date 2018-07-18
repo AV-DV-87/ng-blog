@@ -1,0 +1,10 @@
+<div *ngFor="let article of articles">
+    <div class="card col-sm-6">
+        <div class="card-body">
+          <h5 class="card-title">{{article.title}}</h5>
+          <p class="card-text">{{article.content}}</p>
+          <img src="assets/edit.svg" class="float-right edit-icon" (click)="edit(article)">
+          <img src="assets/delete.svg" class="float-right delete-icon" (click)="delete(article)">
+        </div>
+      </div>
+</div>
