@@ -1,20 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Article } from './article';
+import { ArticleService } from './article.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
   articles: Array<Article>;
   showList: boolean;
   editArticle: Article;
 
-  constructor() {
+  constructor(private articleService : ArticleService) {
     this.showList = true;
     this.articles = new Array();
+  }
+
+  ngOnInit(){
+    //etape 1 et 2 peuvent être inversée car ASYNC
+    
+    //1 chargé les articles mock
+    this.articleService.loadMock();
+    //2 une fois connécté au service et mock recup rempli articles
+    this.articleService.articles.subscribe((result)=> this.articles = result);
+    console.log('NgONInit terminé')
   }
 
   handleCreate(article: Article) {
