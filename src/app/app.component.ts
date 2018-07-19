@@ -13,51 +13,57 @@ export class AppComponent implements OnInit {
   showList: boolean;
   editArticle: Article;
 
-  constructor(private articleService : ArticleService) {
+  constructor(private articleService: ArticleService) {
     this.showList = true;
     this.articles = new Array();
   }
 
-  ngOnInit(){
-    //etape 1 et 2 peuvent être inversée car ASYNC
-    
-    //1 chargé les articles mock
-    this.articleService.loadMock();
-    //2 une fois connécté au service et mock recup rempli articles
-    this.articleService.articles.subscribe((result)=> this.articles = result);
-    console.log('NgONInit terminé')
+  ngOnInit() {
+    this.articleService.list().subscribe((list) => {
+      console.log('Nb article' + list.length);
+      this.articles = list
+    });
   }
 
   handleCreate(article: Article) {
-    //TODO implement method, put article in articles
-    this.articles.push(article);
+    //deux propriétés en callback pour ok et pas ok
+    this.articleService.create(article)
+      .subscribe({
+
+        next: (newArticle) => console.log(`Article ${newArticle} créé avec succès`),
+
+        error: (errorMessage) => console.log(`Impossible de créer l'article ${article} : ${errorMessage}`),
+        //fin du game
+        complete: () => console.log('Création du nouvel article terminée avec succès !')
+
+      })
     this.showList = true;
-    console.log('Un article a été créé.', article);
+    console.log('Un article a été créé.', article, this.showList);
   }
 
   handleDelete(id: number) {
-    this.updateList(id);
+    this.articleService.delete(id).subscribe({
+      complete: () => console.log(`Article id : ${id} supprimé avec succès`),
+      error: (message) => console.log(`Impossible de supprimer l'article: ${message}`)
+    });
   }
 
   handleUpdate(article: Article) {
-    this.updateList(article.id, article);
-    this.editArticle = undefined;
-    this.showList = true;
+    this.articleService.update(article).subscribe({
+      complete: () => {
+
+        console.log(`Article d'id ${article.id} mis à jour avec succès.`);
+        this.editArticle = undefined;
+        this.showList = true;
+      }, error: (message) => console.log(`Impossible de mettre à jour l'article: ${message}`)
+    });
   }
 
   showEdit(id: number) {
-    this.editArticle = this.articles.find((a) => a.id === id);
-    this.showList = false;
-  }
-
-  private updateList(id: number, article?: Article) {
-    let index = this.articles.findIndex((a) => a.id === id);
-    if (index >= 0) {
-      if (article) {
-        this.articles.splice(index, 1, article);
-      } else {
-        this.articles.splice(index, 1);
-      }
-    }
+    this.articleService.read(id).subscribe(
+      (article) => {
+        this.editArticle = article;
+        this.showList = false;
+      });
   }
 }

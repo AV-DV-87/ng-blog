@@ -1,5 +1,9 @@
 export class Article {
     id: number;
     title: string;
-    content: string;
+    description: string;
+
+    toString() {
+        return `[id=${this.id}, title=${this.title}]`
+    }
 }

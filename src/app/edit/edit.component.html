@@ -1,14 +1,25 @@
 <h2>Créér un nouvel article : </h2>
 <div class="col-sm-6">
-  <form (ngSubmit)="submit(blogForm)" #blogForm="ngForm">
-    <div class="form-group">
+  <form (ngSubmit)="blogForm.valid && submit(blogForm)" #blogForm="ngForm">
+    <div class="form-group" [ngClass]="{'was-validated': blogForm.submitted}">
       <label for="title">Titre :</label>
-      <input id="title" name="title" class="form-control" [(ngModel)]='model.title'>
+      <input id="title" name="title" class="form-control" minlength="6" maxlength="255" required [(ngModel)]='model.title' #titleControl="ngModel">
+      <div class="msgError" [ngClass]="{'invalid-feedback': blogForm.submitted && titleControl.errors.required}">
+          Champs obligatoire.
+      </div>
+      <div class="msgError" [ngClass]="{'invalid-feedback': blogForm.submitted && titleControl.errors.minlength}" >
+          Le titre doit comporter minimum 6 caractères.
+      </div>
+      <div class="msgError" [ngClass]="{'invalid-feedback': blogForm.submitted && titleControl.errors.maxlength}">
+        Champs obligatoire. Le titre doit comporter entre 6 et 50 caractères.
+      </div>
     </div>
     <div class="form-group">
       <label for="description">Contenu :</label>
-      <textarea id="description" name="description" class="form-control" [(ngModel)]='model.content'></textarea>
+      <textarea id="description" name="description" class="form-control" [(ngModel)]='model.description'></textarea>
     </div>
-    <button>Valider</button>
+    <button class="btn btn-primary">Valider</button>
   </form>
+  <!-- {{blogForm.controls.title.invalid}} -->
+  <!-- {{blogForm.controls.['title'].invalid}} -->
 </div>
