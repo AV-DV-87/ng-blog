@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Article} from '../article';
 import {ArticleService} from '../article.service';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Location} from '@angular/common';
+import {filter, map, switchMap} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-view-edit',
@@ -17,32 +19,42 @@ export class ViewEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    // TODO attention subscribe dans un subscribe
-    this.route.queryParamMap.subscribe(
-      (paramMap: ParamMap) => {
-        if (paramMap.has('id')) {
-          let id: number = parseInt(paramMap.get('id'));
-          this.articleService.read(id).subscribe((article) =>
-          this.article = article);
-        } else {
-          this.article = undefined;
-        }
-      }
-    );
+    // OLD SCHOOL VERSION pas bon car subscribe dans subscribe
+    // this.route.queryParamMap.subscribe(
+    //   (paramMap: ParamMap) => {
+    //     if (paramMap.has('id')) {
+    //       const id: number = parseInt(paramMap.get('id'));
+    //       this.articleService.read(id).subscribe((article) =>
+    //       this.article = article);
+    //     } else {
+    //       this.article = undefined;
+    //     }
+    //   }
+    // );
+    // soucrire aux routes sans id pour réinitialiser en mode création
+    this.route.queryParamMap.pipe(filter((paramMap) => !paramMap.has('id')))
+      .subscribe(() => this.article = undefined );
+    // soucrire aux routes avec un id pour récupérer l'id puis appeler articleService.read
+    this.route.queryParamMap.pipe(
+      filter((paramMap) => paramMap.has('id')),
+      map((paramMap) => paramMap.get('id')),
+      map((id: string) => parseInt(id)),
+      switchMap((id: number) => this.articleService.read(id))
+    ).subscribe((article) => this.article = article);
   }
-  create(article: Article){
+  create(article: Article) {
     // deux propriétés en callback pour ok et pas ok
     this.articleService.create(article)
       .subscribe({
         next: (newArticle) => console.log(`Article ${newArticle} créé avec succès`),
         error: (errorMessage) => console.log(`Impossible de créer l'article ${article} : ${errorMessage}`),
         complete: () => { console.log('Création du nouvel article terminée avec succès !');
-        this.location.back();}
+        this.location.back(); }
 
       });
   }
 
-  update(article: Article){
+  update(article: Article) {
     this.articleService.update(article).subscribe({
       complete: () => {
         console.log(`Article d'id ${article.id} mis à jour avec succès.`);
