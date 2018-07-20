@@ -1,7 +1,29 @@
-<div class="container-fluid">
-    <a href="" (click)="showList = !showList">Créer un nouvel article</a>
-    <app-list [articles]="articles" *ngIf="showList; else showFormTpl" (onDelete)="handleDelete($event)" (onEdit)="showEdit($event)"></app-list>
+<!--<div class="container-fluid">-->
+<!--<a href="" (click)="showList = !showList">Créer un nouvel article</a>-->
+<!--<app-list [articles]="articles" *ngIf="showList; else showFormTpl" (onDelete)="handleDelete($event)" (onEdit)="showEdit($event)"></app-list>-->
+<!--</div>-->
+<!--<ng-template #showFormTpl>-->
+<!--<app-edit [article]="editArticle" (onCreate)="handleCreate($event)" (onUpdate)="handleUpdate($event)"></app-edit>-->
+<!--</ng-template>-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+  <a class="navbar-brand" href="#">NG Blog</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample10"
+          aria-controls="navbarsExample10" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-md-center">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Liste des articles <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Ajouter un article</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <h1>{{title}}</h1>
+  <router-outlet></router-outlet>
 </div>
-<ng-template #showFormTpl>
-        <app-edit [article]="editArticle" (onCreate)="handleCreate($event)" (onUpdate)="handleUpdate($event)"></app-edit>
-</ng-template>
+

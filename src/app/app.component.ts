@@ -9,7 +9,7 @@ import { ArticleService } from './article.service';
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  articles: Array<Article>;
+
   showList: boolean;
   editArticle: Article;
 
