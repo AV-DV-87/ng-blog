@@ -1,5 +1,5 @@
 <h2>Créér un nouvel article : </h2>
-<div class="col-sm-6">
+<div class="my-4">
   <form (ngSubmit)="blogForm.valid && submit(blogForm)" #blogForm="ngForm">
     <div class="form-group" [ngClass]="{'was-validated': blogForm.submitted}">
       <label for="title">Titre :</label>

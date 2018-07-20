@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Article } from '../article';
 import { NgForm } from '@angular/forms';
 
@@ -7,7 +7,7 @@ import { NgForm } from '@angular/forms';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnChanges {
 
 
   @Input() article: Article;
@@ -24,9 +24,11 @@ export class EditComponent implements OnInit {
     this.onUpdate = new EventEmitter();
   }
 
-  ngOnInit() {
-    if (this.article) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.article.currentValue) {
       this.model = this.article;
+    } else {
+      this.model = new Article();
     }
   }
 
@@ -35,7 +37,7 @@ export class EditComponent implements OnInit {
     if (this.article) {
       this.onUpdate.emit(data);
     } else {
-      //reattribution de l'adresse pour la création du prochain article
+      // reattribution de l'adresse pour la création du prochain article
       this.onCreate.emit(data);
     }
     form.resetForm();

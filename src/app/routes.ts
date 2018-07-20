@@ -4,7 +4,7 @@ import {ViewEditComponent} from './view-edit/view-edit.component';
 
 export const ROUTES: Routes = [
   {path: 'articles', component: ViewListComponent},
-  {path: 'articles', component: ViewEditComponent},
+  {path: 'edit', component: ViewEditComponent},
   {path: '', redirectTo: '/articles', pathMatch: 'full'}
 ];
 
